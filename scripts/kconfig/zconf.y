@@ -175,7 +175,6 @@ config_entry_start: T_CONFIG T_WORD T_EOL
 
 config_stmt: config_entry_start config_option_list
 {
-	menu_end_entry();
 	printd(DEBUG_PARSE, "%s:%d:endconfig\n", zconf_curname(), zconf_lineno());
 };
 
@@ -193,7 +192,6 @@ menuconfig_stmt: menuconfig_entry_start config_option_list
 		current_entry->prompt->type = P_MENU;
 	else
 		zconfprint("warning: menuconfig statement without prompt");
-	menu_end_entry();
 	printd(DEBUG_PARSE, "%s:%d:endconfig\n", zconf_curname(), zconf_lineno());
 };
 
@@ -419,9 +417,7 @@ comment: T_COMMENT prompt T_EOL
 };
 
 comment_stmt: comment depends_list
-{
-	menu_end_entry();
-};
+;
 
 /* help option */
 
