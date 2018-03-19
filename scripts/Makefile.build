@@ -78,10 +78,10 @@ endif
 
 ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
 lib-target := $(obj)/lib.a
-obj-y += $(obj)/lib-ksyms.o
+real-obj-y += $(obj)/lib-ksyms.o
 endif
 
-ifneq ($(strip $(obj-y) $(need-builtin)),)
+ifneq ($(strip $(real-obj-y) $(need-builtin)),)
 builtin-target := $(obj)/built-in.a
 endif
 
@@ -440,7 +440,7 @@ endif
 $(obj)/%.o: $(src)/%.S $(objtool_dep) FORCE
 	$(call if_changed_rule,as_o_S)
 
-targets += $(real-obj-y) $(real-obj-m) $(lib-y)
+targets += $(filter-out $(subdir-obj-y), $(real-obj-y)) $(real-obj-m) $(lib-y)
 targets += $(extra-y) $(MAKECMDGOALS) $(always)
 
 # Linker scripts preprocessor (.lds.S -> .lds)
@@ -505,12 +505,12 @@ cmd_make_empty_builtin = rm -f $@; $(AR) rcSTP$(KBUILD_ARFLAGS)
 quiet_cmd_link_o_target = AR      $@
 
 # If the list of objects to link is empty, just create an empty built-in.a
-cmd_link_o_target = $(if $(strip $(obj-y)),\
-		      $(cmd_make_builtin) $@ $(filter $(obj-y), $^) \
+cmd_link_o_target = $(if $(strip $(real-obj-y)),\
+		      $(cmd_make_builtin) $@ $(filter $(real-obj-y), $^) \
 		      $(cmd_secanalysis),\
 		      $(cmd_make_empty_builtin) $@)
 
-$(builtin-target): $(obj-y) FORCE
+$(builtin-target): $(real-obj-y) FORCE
 	$(call if_changed,link_o_target)
 
 targets += $(builtin-target)
@@ -634,7 +634,7 @@ $(multi-used-m): FORCE
 $(call multi_depend, $(multi-used-y), .o, -objs -y)
 $(call multi_depend, $(multi-used-m), .o, -objs -y -m)
 
-targets += $(multi-used-y) $(multi-used-m)
+targets += $(multi-used-m)
 targets := $(filter-out $(PHONY), $(targets))
 
 # Descending
