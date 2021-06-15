@@ -2124,6 +2124,7 @@ static void msm_pdev_shutdown(struct platform_device *pdev)
 
 	/* set this after lastclose to allow kickoff from lastclose */
 	priv->shutdown_in_progress = true;
+
 }
 
 static const struct of_device_id dt_match[] = {
