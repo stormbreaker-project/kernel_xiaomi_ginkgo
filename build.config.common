@@ -6,4 +6,6 @@ CLANG_PREBUILT_BIN=prebuilts-master/clang/host/linux-x86/clang-r383902/bin
 BUILDTOOLS_PREBUILT_BIN=build/build-tools/path/linux-x86
 
 EXTRA_CMDS=''
+LD_LIBRARY_PATH=${ROOT_DIR}/prebuilts-master/clang/host/linux-x86/clang-r383902/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
 STOP_SHIP_TRACEPRINTK=1
